@@ -56,7 +56,13 @@
 				this.$emit('closeReq');
 			},
 		save(){
-					axios.post('/notebook/public/notebook',this.$data.list).then( (response)=>{this.close(),this.$parent.lists.push(response.data)}).catch( (error)=> this.errors=error.response.data);//will save the error on the object errors
+					axios.post('/notebook/public/notebook',this.$data.list).then( (response)=>{this.close()
+						this.$parent.lists.push(response.data)
+						this.$parent.lists.sort(function(a,b){
+							if (a.name>b.name) {return 1;}else if(b.name>a.name){return -1;}
+						})
+						this.list=''
+						}).catch( (error)=> this.errors=error.response.data);//will save the error on the object errors
 			}
 		}
 	}

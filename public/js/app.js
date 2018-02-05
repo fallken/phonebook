@@ -43850,7 +43850,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var _this = this;
 
 			axios.post('/notebook/public/notebook', this.$data.list).then(function (response) {
-				_this.close(), _this.$parent.lists.push(response.data);
+				_this.close();
+				_this.$parent.lists.push(response.data);
+				_this.$parent.lists.sort(function (a, b) {
+					if (a.name > b.name) {
+						return 1;
+					} else if (b.name > a.name) {
+						return -1;
+					}
+				});
+				_this.list = '';
 			}).catch(function (error) {
 				return _this.errors = error.response.data;
 			}); //will save the error on the object errors
