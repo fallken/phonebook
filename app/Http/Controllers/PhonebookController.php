@@ -87,4 +87,10 @@ class PhonebookController extends Controller
     {
         //
     }
+    // functions defined by myself
+
+    public function listData(){
+        return Phonebook::orderBy('name','ASC')->get();
+
+    }
 }

@@ -43676,15 +43676,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 var Add = __webpack_require__(48);
-
+var Show = __webpack_require__(65);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: { Add: Add },
+  components: { Add: Add, Show: Show },
   data: function data() {
     return {
-      addActive: ''
+      addActive: '',
+      showActive: '',
+      lists: {},
+      errors: {}
     };
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get('/notebook/public/listData').then(function (response) {
+      return _this.lists = response.data;
+    }).catch(function (error) {
+      return _this.errors = error.response.data;
+    }); //will save the error on the object errors
   },
 
   methods: {
@@ -43692,7 +43705,11 @@ var Add = __webpack_require__(48);
       this.addActive = 'is-active';
     },
     close: function close() {
-      this.addActive = '';
+      this.addActive = this.showActive = '';
+    },
+    show: function show(key) {
+      this.$children[1].list = this.lists[key];
+      this.showActive = 'is-active';
     }
   }
 });
@@ -43984,28 +44001,63 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("nav", { staticClass: "panel column is-offset-2 is-8" }, [
-        _c("p", { staticClass: "panel-heading " }, [
-          _vm._v("\r\n    repositories\r\n     "),
-          _c(
-            "button",
-            {
-              staticClass: "button is-link is-outlined is-round",
-              on: { click: _vm.openAdd }
-            },
-            [_vm._v("reset all filters")]
-          )
-        ]),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _vm._m(1),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel-block" })
-      ]),
+      _c(
+        "nav",
+        { staticClass: "panel column is-offset-2 is-8" },
+        [
+          _c("p", { staticClass: "panel-heading " }, [
+            _vm._v("\r\n    repositories\r\n     "),
+            _c(
+              "button",
+              {
+                staticClass: "button is-link is-outlined is-round",
+                on: { click: _vm.openAdd }
+              },
+              [_vm._v("reset all filters")]
+            )
+          ]),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._l(_vm.lists, function(item, key) {
+            return _c("a", { staticClass: "panel-block" }, [
+              _c("span", { staticClass: "column is-7" }, [
+                _vm._v(_vm._s(item.name))
+              ]),
+              _vm._v(" "),
+              _vm._m(1, true),
+              _vm._v(" "),
+              _vm._m(2, true),
+              _vm._v(" "),
+              _c(
+                "span",
+                { staticClass: "has-text-primary panel-icon column is-1" },
+                [
+                  _c("i", {
+                    staticClass: "fa fa-eye ",
+                    on: {
+                      click: function($event) {
+                        _vm.show(key)
+                      }
+                    }
+                  })
+                ]
+              )
+            ])
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-block" })
+        ],
+        2
+      ),
       _vm._v(" "),
       _c("Add", {
         attrs: { openModal: _vm.addActive },
+        on: { closeReq: _vm.close }
+      }),
+      _vm._v(" "),
+      _c("Show", {
+        attrs: { showModal: _vm.showActive },
         on: { closeReq: _vm.close }
       })
     ],
@@ -44034,20 +44086,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("a", { staticClass: "panel-block" }, [
-      _c("span", { staticClass: "column is-7" }, [_vm._v("marksheet")]),
-      _vm._v(" "),
-      _c("span", { staticClass: "has-text-danger panel-icon column is-1" }, [
-        _c("i", { staticClass: "fa fa-trash " })
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "has-text-info panel-icon column is-1" }, [
-        _c("i", { staticClass: "fa fa-edit " })
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "has-text-primary panel-icon column is-1" }, [
-        _c("i", { staticClass: "fa fa-eye " })
-      ])
+    return _c(
+      "span",
+      { staticClass: "has-text-danger panel-icon column is-1" },
+      [_c("i", { staticClass: "fa fa-trash " })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "has-text-info panel-icon column is-1" }, [
+      _c("i", { staticClass: "fa fa-edit " })
     ])
   }
 ]
@@ -44151,6 +44201,187 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(67)
+/* template */
+var __vue_template__ = __webpack_require__(66)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Show.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-745dfb18", Component.options)
+  } else {
+    hotAPI.reload("data-v-745dfb18", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "modal", class: _vm.showModal }, [
+    _c("div", { staticClass: "modal-background" }),
+    _vm._v(" "),
+    _c("div", { staticClass: "modal-card" }, [
+      _c("header", { staticClass: "modal-card-head" }, [
+        _c("p", { staticClass: "modal-card-title" }, [_vm._v("Modal title")]),
+        _vm._v(" "),
+        _c("button", {
+          staticClass: "delete",
+          attrs: { "aria-label": "close" },
+          on: { click: _vm.close }
+        })
+      ]),
+      _vm._v(" "),
+      _c("section", { staticClass: "modal-card-body" }, [
+        _c("li", { staticClass: "panel-block" }, [
+          _vm._m(0),
+          _vm._v(_vm._s(_vm.list.name))
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "panel-block" }, [
+          _vm._m(1),
+          _vm._v(_vm._s(_vm.list.phone))
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "panel-block" }, [
+          _vm._m(2),
+          _vm._v(_vm._s(_vm.list.email))
+        ])
+      ]),
+      _vm._v(" "),
+      _c("footer", { staticClass: "modal-card-foot" }, [
+        _c("button", { staticClass: "button", on: { click: _vm.close } }, [
+          _vm._v("close")
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { staticClass: "column is-2", attrs: { for: "" } }, [
+      _c("b", [_vm._v("Name")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { staticClass: "column is-2", attrs: { for: "" } }, [
+      _c("b", [_vm._v("Phone")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { staticClass: "column is-2", attrs: { for: "" } }, [
+      _c("b", [_vm._v("Email")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-745dfb18", module.exports)
+  }
+}
+
+/***/ }),
+/* 67 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: ['showModal'],
+	methods: {
+		close: function close() {
+			this.$emit('closeReq');
+		}
+	},
+
+	data: function data() {
+		return {
+			list: ''
+		};
+	}
+});
 
 /***/ })
 /******/ ]);

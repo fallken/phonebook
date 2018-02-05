@@ -17,5 +17,7 @@ Route::get('/notebook/{name}',function(){
 	return redirect('/');
 })->where('name','[A-Za-z]+');
 Route::post('phone/store','PhonebookController@store');
+Route::get('/listData','PhonebookController@listData');
 
 Route::resource('notebook','PhonebookController');
+
