@@ -7,11 +7,31 @@
       <button class="delete" aria-label="close" @click='close'></button>
     </header>
     <section class="modal-card-body">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae labore iure voluptatibus, aspernatur officia! Esse dolore obcaecati qui quis quam necessitatibus minima commodi perspiciatis libero, pariatur, quia a, excepturi perferendis.Explicabo pariatur officiis voluptates, magnam architecto, illo voluptatem! Quas iste soluta molestias velit odio quaerat, libero porro corporis labore ducimus ipsum, pariatur obcaecati illum sed. Perferendis laborum ipsam minus. Voluptatibus!Atque delectus velit, explicabo iure, ex laudantium, consequuntur dolorem illum voluptatibus molestiae recusandae cupiditate quas tenetur quam. Quo, velit excepturi nisi reprehenderit quia doloribus minus perferendis voluptatum facilis, dicta nostrum.
+     <div class="field">
+			 <label class="label">Name</label>
+			  <div class="control">
+			    	<input class="input" :class="{'is-danger':errors.name}" type="text" placeholder="Text input" v-model='list.name'>
+			  </div>
+			  <small v-if="errors.name" class="has-text-danger"> {{errors.name[0]}} </small>
+		</div>
+		<div class="field">
+			 <label class="label">Phone</label>
+			  <div class="control">
+			    	<input class="input" :class="{'is-danger':errors.phone}" type="number" placeholder="Text input" v-model='list.phone'>
+			  </div>
+			   <small v-if="errors.phone" class="has-text-danger"> {{errors.phone[0]}} </small>
+		</div>
+		<div class="field">
+			 <label class="label">Email</label>
+			  <div class="control">
+			    	<input class="input" :class="{'is-danger':errors.email}" type="email" placeholder="Text input" v-model='list.email'>
+			  </div>
+			   <small v-if="errors.email" class="has-text-danger"> {{errors.email[0]}} </small>
+		</div>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success">Save changes</button>
-      <button class="button">Cancel</button>
+      <button class="button is-success" @click='save'>Save changes</button>
+      <button class="button" @click='close'>Cancel</button>
     </footer>
   </div>
 </div>
@@ -21,10 +41,23 @@
 	export default{	
 		props:['openModal']
 		,
+		data(){
+			return{
+				list:{
+					name:'',
+					phone:'',
+					email:''
+				},
+				errors:{}
+			}
+		},
 		methods:{
-			close(){
+		close(){
 				this.$emit('closeReq');
+			},
+		save(){
+					axios.post('/notebook/public/notebook',this.$data.list).then( (response)=>this.close()).catch( (error)=> this.errors=error.response.data);//will save the error on the object errors
 			}
 		}
 	}
-</script>
+</script> 

@@ -10,7 +10,12 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', function () {
-    return view('phonebook');
+    return view('welcome');
 });
+Route::get('/notebook/{name}',function(){
+	return redirect('/');
+})->where('name','[A-Za-z]+');
+Route::post('phone/store','PhonebookController@store');
+
+Route::resource('notebook','PhonebookController');
