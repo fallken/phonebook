@@ -56,7 +56,7 @@
 				this.$emit('closeReq');
 			},
 		save(){
-					axios.post('/notebook/public/notebook',this.$data.list).then( (response)=>this.close()).catch( (error)=> this.errors=error.response.data);//will save the error on the object errors
+					axios.post('/notebook/public/notebook',this.$data.list).then( (response)=>{this.close(),this.$parent.lists.push(response.data)}).catch( (error)=> this.errors=error.response.data);//will save the error on the object errors
 			}
 		}
 	}
