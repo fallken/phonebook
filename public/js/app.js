@@ -43690,18 +43690,38 @@ var Edit = __webpack_require__(54);
       addActive: '',
       showActive: '',
       showEdit: '',
+      searchQuery: '',
+      temp: '',
       lists: {},
       errors: {},
       loading: false
     };
   },
+
+  watch: {
+    searchQuery: function searchQuery() {
+      var _this = this;
+
+      if (this.searchQuery.length > 0) {
+        this.temp = this.lists.filter(function (item) {
+          return Object.keys(item).some(function (key) {
+            var string = String(item[key]);
+            return string.toLowerCase().indexOf(_this.searchQuery.toLowerCase()) > -1;
+          });
+        });
+        // console.log(result);
+      } else {
+        this.temp = this.lists;
+      }
+    }
+  },
   created: function created() {
-    var _this = this;
+    var _this2 = this;
 
     axios.get('/notebook/public/listData').then(function (response) {
-      return _this.lists = response.data;
+      return _this2.lists = _this2.temp = response.data;
     }).catch(function (error) {
-      return _this.errors = error.response.data;
+      return _this2.errors = error.response.data;
     }); //will save the error on the object errors
   },
 
@@ -43713,22 +43733,22 @@ var Edit = __webpack_require__(54);
       this.addActive = this.showActive = this.showEdit = '';
     },
     show: function show(key) {
-      this.$children[1].list = this.lists[key];
+      this.$children[1].list = this.tem[key];
       this.showActive = 'is-active';
     },
     edit: function edit(key) {
-      this.$children[2].mylist = this.lists[key];
+      this.$children[2].mylist = this.temp[key];
       this.showEdit = 'is-active';
     },
     del: function del(key, id) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (confirm('are u sure about deleting this contact?')) {
         this.loading = !this.loading;
         axios.delete('/notebook/public/notebook/' + id).then(function (response) {
-          _this2.lists.splice(key, 1), _this2.loading = !_this2.loading;
+          _this3.lists.splice(key, 1), _this3.loading = !_this3.loading;
         }).catch(function (error) {
-          return _this2.errors = error.response.data;
+          return _this3.errors = error.response.data;
         });
       }
     }
@@ -44494,9 +44514,35 @@ var render = function() {
               : _vm._e()
           ]),
           _vm._v(" "),
-          _vm._m(0),
+          _c("div", { staticClass: "panel-block" }, [
+            _c("p", { staticClass: "control has-icons-left" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.searchQuery,
+                    expression: "searchQuery"
+                  }
+                ],
+                staticClass: "input is-small",
+                attrs: { type: "text", placeholder: "search" },
+                domProps: { value: _vm.searchQuery },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.searchQuery = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
+          ]),
           _vm._v(" "),
-          _vm._l(_vm.lists, function(item, key) {
+          _vm._l(_vm.temp, function(item, key) {
             return _c("a", { staticClass: "panel-block" }, [
               _c("span", { staticClass: "column is-7" }, [
                 _vm._v(_vm._s(item.name))
@@ -44577,17 +44623,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-block" }, [
-      _c("p", { staticClass: "control has-icons-left" }, [
-        _c("input", {
-          staticClass: "input is-small",
-          attrs: { type: "text", placeholder: "search" }
-        }),
-        _vm._v(" "),
-        _c("span", { staticClass: "icon is-small is-left" }, [
-          _c("i", { staticClass: "fa fa-search" })
-        ])
-      ])
+    return _c("span", { staticClass: "icon is-small is-left" }, [
+      _c("i", { staticClass: "fa fa-search" })
     ])
   }
 ]

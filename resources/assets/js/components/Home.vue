@@ -7,13 +7,13 @@
   </p>
   <div class="panel-block">
     <p class="control has-icons-left">
-      <input class="input is-small" type="text" placeholder="search">
+      <input class="input is-small" type="text" placeholder="search" v-model="searchQuery">
       <span class="icon is-small is-left">
         <i class="fa fa-search"></i>
       </span>
     </p>
   </div>
-  <a class="panel-block" v-for="item,key in lists">
+  <a class="panel-block" v-for="item,key in temp">
     
     <span class="column is-7">{{item.name}}</span>
     <span class="has-text-danger panel-icon column is-1"><i class="fa fa-trash " @click='del(key,item.id)'></i></span>
@@ -42,13 +42,31 @@ let Edit=require('./Edit.vue');
           addActive:'',
           showActive:'',
           showEdit:'',
+          searchQuery:'',
+          temp:'',
           lists:{},
           errors:{},
           loading:false
         }
       },
+      watch:{
+        searchQuery(){
+          if (this.searchQuery.length>0) {
+          this.temp=  this.lists.filter((item)=>{
+           return  Object.keys(item).some((key)=>{
+                let string=String(item[key]);
+                return string.toLowerCase().indexOf(this.searchQuery.toLowerCase())>-1;
+            });
+            })
+          // console.log(result);
+          }
+          else {
+            this.temp=this.lists;
+          }
+        }
+      },
       created(){
-          axios.get('/notebook/public/listData').then( (response)=>this.lists=response.data).catch( (error)=> this.errors=error.response.data);//will save the error on the object errors
+          axios.get('/notebook/public/listData').then( (response)=>this.lists=this.temp=response.data).catch( (error)=> this.errors=error.response.data);//will save the error on the object errors
         },
       methods:{
 
@@ -59,11 +77,11 @@ let Edit=require('./Edit.vue');
           this.addActive=this.showActive=this.showEdit='';
         },
         show(key){
-          this.$children[1].list=this.lists[key];
+          this.$children[1].list=this.tem[key];
           this.showActive='is-active';
         },
         edit(key){
-          this.$children[2].mylist=this.lists[key];
+          this.$children[2].mylist=this.temp[key];
           this.showEdit='is-active';
         },
         del(key,id){
